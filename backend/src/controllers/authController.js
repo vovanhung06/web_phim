@@ -1,0 +1,105 @@
+import User from '../models/User.js';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
+// Đăng ký
+export const register = async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return res.status(400).json({ message: 'Email đã tồn tại' });
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({ username, email, password: hashedPassword });
+    await newUser.save();
+
+    res.status(201).json({ message: 'Đăng ký thành công' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Đăng nhập
+export const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: 'Email không tồn tại' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ message: 'Sai mật khẩu' });
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    res.json({ message: 'Đăng nhập thành công', token });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Lấy danh sách tất cả user (chỉ để test/dev, không nên public ngoài production)
+export const getUsers = async (req, res) => {
+  try {
+    const users = await User.find().select("-password"); // bỏ field password cho an toàn
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password"); // bỏ password
+    if (!user) return res.status(404).json({ message: "User không tồn tại" });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  try {
+    const { username, gender } = req.body;
+
+    // req.user.id lấy từ middleware verifyToken
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { username, gender },
+      { new: true } // trả về dữ liệu mới sau khi update
+    ).select("-password");
+
+    if (!user) return res.status(404).json({ message: "User không tồn tại" });
+
+    res.json({ message: "Cập nhật thành công", user });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Đổi mật khẩu
+export const changePassword = async (req, res) => {
+  try {
+    const { oldPass, newPass } = req.body;
+
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ message: "User không tồn tại" });
+
+    // So sánh mật khẩu cũ
+    const isMatch = await bcrypt.compare(oldPass, user.password);
+    if (!isMatch) return res.status(400).json({ message: "Mật khẩu cũ không đúng" });
+
+    // Hash mật khẩu mới
+    const hashedPassword = await bcrypt.hash(newPass, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({ message: "Đổi mật khẩu thành công" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export default { register, login, getUsers, getProfile, updateUser, changePassword }; 
