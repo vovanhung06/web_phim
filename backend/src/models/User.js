@@ -16,7 +16,16 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+  gender:{
+    type: String,
+    required: true,
+    unique: true,
+    lowercase: true
+  },
+    role: {
+    type: String,
+  },
 }, { timestamps: true });
 
 export default mongoose.model('User', userSchema);

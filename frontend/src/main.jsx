@@ -11,6 +11,7 @@ import SearchPage from "./pages/SearchPage.jsx";
 import Login from "./pages/login.jsx";
 import Register from "./pages/Register.jsx";
 import AccountPage from "./pages/AccountPage.jsx";
+import AdminPage from "./pages/AdminPage.jsx";
 
 
 
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "/account",
         element: <AccountPage />,
+      },
+      {
+        path: "/admin",
+        element: <AdminPage />,
       },
       {
         path: "/actor/:id",

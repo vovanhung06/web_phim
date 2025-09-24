@@ -29,6 +29,7 @@ export default function Login({ onLogin }) {
   try {
     setLoading(true);
 
+    // B1: Đăng nhập để lấy token
     const res = await fetch("http://localhost:5001/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -36,25 +37,37 @@ export default function Login({ onLogin }) {
     });
 
     const data = await res.json();
-
     if (!res.ok) throw new Error(data.message || "Đăng nhập thất bại.");
 
-    // ✅ Lưu token + email vào localStorage
+    // Lưu token
     localStorage.setItem("token", data.token);
-    localStorage.setItem("email", email);
-
-    // 🔄 thông báo cho các component khác (Header) cập nhật ngay
     window.dispatchEvent(new Event("storage"));
 
-    alert("Đăng nhập thành công!");
-    if (onLogin) onLogin(data); // callback nếu bạn muốn
+    // B2: Gọi /api/auth/me để lấy thông tin user (có role)
+    const profileRes = await fetch("http://localhost:5001/api/auth/me", {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${data.token}`
+      }
+    });
+    const user = await profileRes.json();
+    if (!profileRes.ok) throw new Error(user.message || "Lấy thông tin user thất bại.");
 
-if (email === "admin@gmail.com") {
-  window.open("/admin", "_blank"); // mở tab mới
-  navigate("/"); // vẫn giữ user ở trang chủ hiện tại
-} else {
-  navigate("/");
-}
+    // Lưu thêm role/email nếu muốn
+    localStorage.setItem("role", user.role);
+    localStorage.setItem("email", user.email);
+    
+
+    alert("Đăng nhập thành công!");
+    if (onLogin) onLogin({ ...data, user });
+
+    // B3: Check role để điều hướng
+    if (user.role === "admin") {
+      window.open("/admin", "_blank"); // mở tab mới
+      navigate("/");                   // vẫn giữ user ở trang chủ hiện tại
+    } else {
+      navigate("/");
+    }
 
   } catch (err) {
     setError(err.message || "Đăng nhập thất bại.");
@@ -62,6 +75,7 @@ if (email === "admin@gmail.com") {
     setLoading(false);
   }
 };
+
 
 
 

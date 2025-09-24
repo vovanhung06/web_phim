@@ -5,14 +5,14 @@ import jwt from 'jsonwebtoken';
 // Đăng ký
 export const register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, gender, role } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ message: 'Email đã tồn tại' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ username, email, password: hashedPassword });
+    const newUser = new User({ username, email, password: hashedPassword, gender, role });
     await newUser.save();
 
     res.status(201).json({ message: 'Đăng ký thành công' });
@@ -102,4 +102,46 @@ export const changePassword = async (req, res) => {
   }
 };
 
-export default { register, login, getUsers, getProfile, updateUser, changePassword }; 
+// Sửa thông tin 1 user (dành cho admin)
+export const updateUserByAdmin = async (req, res) => {
+  try {
+    const { id } = req.params;                   // id user cần sửa
+    const { username, gender, role } = req.body;  // các field muốn cập nhật
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      { username, gender, role },
+      { new: true } // trả về document mới sau khi update
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User không tồn tại" });
+    }
+
+    res.json({
+      message: "Cập nhật user thành công",
+      user,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+// Xoá user (chỉ admin mới có quyền)
+export const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findByIdAndDelete(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User không tồn tại" });
+    }
+
+    res.json({ message: "Đã xoá user thành công" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+export default { register, login, getUsers, getProfile, updateUser, changePassword, updateUserByAdmin , deleteUser }; 
