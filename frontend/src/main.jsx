@@ -12,8 +12,8 @@ import Login from "./pages/login.jsx";
 import Register from "./pages/Register.jsx";
 import AccountPage from "./pages/AccountPage.jsx";
 import AdminPage from "./pages/AdminPage.jsx";
-
-
+import { Toaster } from "react-hot-toast";
+import { FavoriteProvider } from "./context/FavoriteContext";
 
 const HomePage = lazy(() => import("./pages/HomePage.jsx"));
 const ActorPage = lazy(() => import("./pages/ActorPage.jsx"));
@@ -71,10 +71,15 @@ const router = createBrowserRouter([
   },
 ]);
 
+
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ModalProvider>
-      <RouterProvider router={router} />
+      <FavoriteProvider>
+        <RouterProvider router={router} />
+        <Toaster />
+      </FavoriteProvider>
     </ModalProvider>
-  </StrictMode>,
+  </StrictMode>
 );

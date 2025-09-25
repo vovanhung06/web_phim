@@ -3,6 +3,7 @@ import Sidebar from "./Sidebar";
 import AccountInfo from "./AccountInfo";
 import EditAccount from "./EditAccount";
 import ChangePassword from "./ChangePassword";
+import FavoriteList from "./FavoriteList";
 
 export default function AccountLayout() {
   const [tab, setTab] = useState("info");
@@ -45,7 +46,7 @@ export default function AccountLayout() {
         {tab === "info" && <AccountInfo setTab={setTab} user={user} />}
         {tab === "edit" && <EditAccount setTab={setTab} user={user} setUser={setUser} />}
         {tab === "password" && <ChangePassword setTab={setTab} user={user} />}
-        {tab === "favorites" && <div>📌 Danh sách phim yêu thích ở đây</div>}
+        {tab === "favorites" && <FavoriteList />}
         {tab === "list" && <div>📝 Danh sách của bạn ở đây</div>}
         {tab === "history" && <div>📺 Lịch sử xem phim ở đây</div>}
         {tab === "notifications" && <div>🔔 Thông báo mới nhất ở đây</div>}
