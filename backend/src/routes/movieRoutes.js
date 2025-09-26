@@ -14,9 +14,13 @@ const requireAdmin = (req, res, next) => {
 router.get('/', ctrl.list);
 router.get('/popular', ctrl.popular);
 router.get('/discover', ctrl.discover);
+router.get('/search', ctrl.search);
 router.get('/:id/videos', ctrl.videos);
 router.get('/:id/recommendations', ctrl.getRecommendations);
 router.get('/:id', ctrl.getOne);
+
+
+
 
 
 // ===== Admin routes =====

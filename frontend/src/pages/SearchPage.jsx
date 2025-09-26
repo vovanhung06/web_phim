@@ -12,16 +12,28 @@ const SearchPage = () => {
     rating: "all",
   });
 
-  const [min, max] =
-    searchFormValue.rating === "all"
-      ? [0, 10]
-      : searchFormValue.rating.split("-");
+ // Luôn tính min / max từ rating
+const [min, max] =
+  searchFormValue.rating === "all"
+    ? [0, 10]
+    : searchFormValue.rating.split("-");
 
-  const [loading, data] = useFetch({
-    url: `${API_BASE}/discover/${searchFormValue.mediaType}?with_genres=${encodeURIComponent(
-      searchFormValue.genres.join(",")
-    )}&vote_average.gte=${min}&vote_average.lte=${max}`,
-  });
+// Xác định có chọn filter nào không
+const hasGenre = searchFormValue.genres.length > 0;
+const hasRating = searchFormValue.rating !== "all";
+
+// Nếu có filter (rating hoặc genre) thì gọi discover, nếu không thì gọi list
+const url =
+  hasGenre || hasRating
+    ? `${API_BASE}/movies/discover?` +
+      (hasGenre
+        ? `genre=${encodeURIComponent(searchFormValue.genres.join(","))}&`
+        : "") +
+      `minRating=${min}&maxRating=${max}`
+    : `${API_BASE}/movies?page=1&limit=20`;
+
+
+  const [loading, data] = useFetch({ url });
 
   return (
     <div className="gap-[1vw] p-5 lg:px-[10vw] text-black">
@@ -31,10 +43,18 @@ const SearchPage = () => {
           <SearchForm setSearchFormValue={setSearchFormValue} />
         </div>
         <div className="flex-[3]">
-          <CardList data={data?.results} mediaType={searchFormValue.mediaType} />
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <CardList
+              data={data?.results}
+              mediaType={searchFormValue.mediaType}
+            />
+          )}
         </div>
       </div>
     </div>
   );
 };
+
 export default SearchPage;

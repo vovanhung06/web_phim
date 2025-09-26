@@ -6,7 +6,7 @@ export default function ManageCategories() {
   const [newId, setNewId] = useState("");
 
   // ✅ Lấy base url từ .env (vd: VITE_API_BASE_URL=http://localhost:5001/api)
-  const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`;
+  const API_BASE = `${import.meta.env.VITE_API_BASE_URL}`;
 
 
   // 👉 Lấy danh sách từ API

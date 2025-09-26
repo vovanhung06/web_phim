@@ -1,15 +1,16 @@
 import MovieCard from "../MovieCard";
 import useFetch from "../../hooks/useFetch";
 
+
 const RelatedMovie = ({ id, type}) => {
   
-  //const  [isLoading, data] = useFetch({ url: `https://api.themoviedb.org/3/${type}/${id}/recommendations?language=en-US&page=1`})
-  const  [isLoading, data] = useFetch({ url: `/movies/${id}/recommendations?type=${type}`})
+  //const  [isLoading, data] = useFetchtm({ url: `https://api.themoviedb.org/3/${type}/${id}/recommendations?language=en-US&page=1`})
+  const  [isLoading, data] = useFetch({ url: `/movies/popular`})
 
   const relatedMovie = data?.results || [];
   
   if(isLoading){
-    return (<p>Loading...</p>)
+    return (<p>Loading...</p>);
   }
   return (
     <div className="sm:grid-cols-4 p-4">

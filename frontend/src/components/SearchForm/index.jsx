@@ -9,30 +9,25 @@ import { useSearchParams } from "react-router-dom";
 const SearchForm = ({ setSearchFormValue }) => {
   const [searchParams] = useSearchParams();
   const typeViaParam = searchParams.get("media_type");
-  
-  const validMediaType = ["tv", "movie"].includes(typeViaParam)
-    ? typeViaParam
-    : "movie";
+
+
+  //const validMediaType = "movie"; // luôn luôn movie
+
   const { control, watch } = useForm({
     defaultValues: {
-      mediaType: validMediaType,
+      mediaType: "movie",
       genres: [],
       rating: "all",
     },
   });
-  
+
   const newest = watch();
   useEffect(() => {
     setSearchFormValue(newest);
   }, [JSON.stringify(newest)]);
   return (
     <form action="" className="rounded-lg border p-4 shadow-md">
-      <FormField
-        name="mediaType"
-        label={"Media Type"}
-        control={control}
-        Component={MediaTypeInput}
-      />
+
       <FormField
         name="genres"
         label={"Genres"}

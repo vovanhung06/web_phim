@@ -150,3 +150,32 @@ export const discover = async (req, res) => {
   res.json({ page, total, results });
 };
 
+
+
+export const search = async (req, res) => {
+  const q = req.query.q?.trim();
+  const page = parseInt(req.query.page || '1', 10);
+  const limit = parseInt(req.query.limit || '20', 10);
+  const skip = (page - 1) * limit;
+
+  if (!q) {
+    return res.status(400).json({ message: 'Query (q) is required' });
+  }
+
+  const filter = {
+    $or: [
+      { title: new RegExp(q, 'i') },
+      { name: new RegExp(q, 'i') }
+    ]
+  };
+
+  const [total, results] = await Promise.all([
+    Movie.countDocuments(filter),
+    Movie.find(filter).skip(skip).limit(limit).lean()
+  ]);
+
+  res.json({ page, total, results });
+};
+
+
+

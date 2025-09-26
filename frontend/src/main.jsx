@@ -15,6 +15,9 @@ import AdminPage from "./pages/AdminPage.jsx";
 import { Toaster } from "react-hot-toast";
 //import { FavoriteProvider } from "./context/FavoriteContext";
 import { api } from "./libs/api.js";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 
 

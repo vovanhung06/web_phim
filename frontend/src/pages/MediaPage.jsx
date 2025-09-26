@@ -14,10 +14,8 @@ const MediaPage = () => {
 
   // movie: /movies/:id?append=release_dates,credits,videos
   // tv:    /tv/:id?append=credits,videos,seasons
-  const path =
-    type === "tv"
-      ? `/tv/${id}?append=credits,videos,seasons`
-      : `/movies/${id}?append=release_dates,credits,videos`;
+  const path = type === "tv" ? `/tv/${id}` : `/movies/${id}`;
+
 
   const [isLoading, data] = useFetch({ url: `${API_BASE}${path}` });
   const currentMovie = data || {};
