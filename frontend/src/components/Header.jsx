@@ -9,9 +9,11 @@ const Header = () => {
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
   
-  const [searchLoading, searchData] = useFetch({
-    url: `https://api.themoviedb.org/3/search/movie?query=${searchValue}&include_adult=false&language=en-US&page=1`,
-  });
+  const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+const [searchLoading, searchData] = useFetch({
+  url: `${API_BASE}/search/movie?query=${encodeURIComponent(searchValue)}&page=1`,
+});
 
   // trạng thái login
   const [isLoggedIn, setIsLoggedIn] = useState(false);

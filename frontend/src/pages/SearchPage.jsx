@@ -3,14 +3,26 @@ import SearchForm from "../components/SearchForm";
 import useFetch from "../hooks/useFetch";
 import CardList from "../components/CardList";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const SearchPage = () => {
   const [searchFormValue, setSearchFormValue] = useState({
-    mediaType: 'movie',
+    mediaType: "movie",
     genres: [],
-    rating: 'all'
+    rating: "all",
   });
-  const [min, max] = searchFormValue.rating === 'all' ? [0, 10] : searchFormValue.rating.split('-')
-  const [loading, data] = useFetch({ url: `https://api.themoviedb.org/3/discover/${searchFormValue.mediaType}?with_genres=${searchFormValue.genres.join(',')}&c&vote_average.gte=${min}&vote_average.lte=${max}` });
+
+  const [min, max] =
+    searchFormValue.rating === "all"
+      ? [0, 10]
+      : searchFormValue.rating.split("-");
+
+  const [loading, data] = useFetch({
+    url: `${API_BASE}/discover/${searchFormValue.mediaType}?with_genres=${encodeURIComponent(
+      searchFormValue.genres.join(",")
+    )}&vote_average.gte=${min}&vote_average.lte=${max}`,
+  });
+
   return (
     <div className="gap-[1vw] p-5 lg:px-[10vw] text-black">
       <h1 className="font-semibold text-xl">Search</h1>
@@ -25,5 +37,4 @@ const SearchPage = () => {
     </div>
   );
 };
-
 export default SearchPage;

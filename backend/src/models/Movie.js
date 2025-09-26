@@ -43,6 +43,9 @@ const movieSchema = new mongoose.Schema(
     created_by_admin: { type: Boolean, default: false },
     is_featured: { type: Boolean, default: false },
     tags: [String],
+
+    // ✅ Mới thêm: lưu danh sách trailer / video từ TMDb
+    videos: [mongoose.Schema.Types.Mixed],
   },
   { timestamps: true, versionKey: false }
 );

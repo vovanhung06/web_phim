@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes.js";
 import { verifyToken } from "./middleware/authMiddleware.js";
 import cors from "cors";
 import movieRoutes from './routes/movieRoutes.js';   // <-- import default
+import genreRoutes from "./routes/genreRoutes.js"; // <-- import default
 
 dotenv.config();
 
@@ -22,7 +23,11 @@ app.use(express.json());
 connectDB();
 
 app.use("/api/auth", authRoutes);
-app.use('/movies', movieRoutes);
+app.use('/api/movies', movieRoutes);
+app.use("/api/genres", genreRoutes)
+
+
+
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {

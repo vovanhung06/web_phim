@@ -13,7 +13,12 @@ import Register from "./pages/Register.jsx";
 import AccountPage from "./pages/AccountPage.jsx";
 import AdminPage from "./pages/AdminPage.jsx";
 import { Toaster } from "react-hot-toast";
-import { FavoriteProvider } from "./context/FavoriteContext";
+//import { FavoriteProvider } from "./context/FavoriteContext";
+import { api } from "./libs/api.js";
+
+
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 const HomePage = lazy(() => import("./pages/HomePage.jsx"));
 const ActorPage = lazy(() => import("./pages/ActorPage.jsx"));
@@ -50,23 +55,14 @@ const router = createBrowserRouter([
         element: <AdminPage />,
       },
       {
-        path: "/actor/:id",
-        element: <ActorPage />,
-        loader: async ({ params }) => {
-          const res = await fetch(
-            `https://api.themoviedb.org/3/person/${params.id}`,
-            {
-              method: "GET",
-              headers: {
-                accept: "application/json",
-                Authorization:
-                  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzYjAwYjI2YjI5NmVkYWRjZDNiMDBkMGZmMDk4N2NhMSIsIm5iZiI6MTczMzY2MTAwNy4yMDcsInN1YiI6IjY3NTU5MTRmYTE4Y2I4Njk1YWZkNjhlZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.yp1Xsm8VtauuJiXpH6hGZ79EMn5QaKXSkReRDUOC6gk",
-              },
-            },
-          );
-          return res.json();
-        },
-      },
+  path: "/actor/:id",
+  element: <ActorPage />,
+  loader: async ({ params }) => {
+    const res = await fetch(`${API_BASE}/actors/${params.id}`);
+    if (!res.ok) throw new Response(await res.text(), { status: res.status });
+    return res.json();
+  },
+},
     ],
   },
 ]);
@@ -76,10 +72,10 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ModalProvider>
-      <FavoriteProvider>
+      
         <RouterProvider router={router} />
         <Toaster />
-      </FavoriteProvider>
+     
     </ModalProvider>
   </StrictMode>
 );

@@ -2,7 +2,7 @@ import React from "react";
 import ImageComponent from "../Image";
 import { Link } from "react-router-dom";
 
-const ActorInfo = ({ name, character, img, id, popularity }) => {
+const ActorInfo = ({ id, name, character, img, popularity }) => {
   return (
     <Link to={`/actor/${id}`} className="rounded-lg border border-slate-300 shadow-sm">
       <ImageComponent

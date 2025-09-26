@@ -2,10 +2,10 @@ import React from "react";
 import { Link } from "react-router-dom";
 import CircularProgressBar from "./MediaList/CircularProgressBar";
 import ImageComponent from "./Image";
-import { useFavorites } from "../context/FavoriteContext";
+//import { useFavorites } from "../context/FavoriteContext";
 
 const MovieCard = ({ data, mediaType = "" }) => {
-  const { favorites, toggleFavorite } = useFavorites();
+  //const { favorites, toggleFavorite } = useFavorites();
   const { poster_path, vote_average, original_language, id } = data;
 
   // ✅ Luôn lấy type từ data.media_type hoặc prop truyền xuống
@@ -14,14 +14,14 @@ const MovieCard = ({ data, mediaType = "" }) => {
   const releaseDate = type === "movie" ? data.release_date : data.first_air_date;
 
   // Kiểm tra xem phim đã trong favorites chưa
-  const isFavorite = favorites.some(
-    (item) => item.id === id && item.media_type === type
-  );
+  // const isFavorite = favorites.some(
+  //   (item) => item.id === id && item.media_type === type
+  // );
 
-  const handleFavorite = async (e) => {
-    e.preventDefault(); // Ngăn Link redirect khi bấm nút
-    await toggleFavorite({ ...data, media_type: type }, isFavorite);
-  };
+  // const handleFavorite = async (e) => {
+  //   e.preventDefault(); // Ngăn Link redirect khi bấm nút
+  //   await toggleFavorite({ ...data, media_type: type }, isFavorite);
+  // };
 
   return (
     <Link to={`/${type}/${id}`} className="rounded-lg border border-slate-800">
@@ -41,12 +41,12 @@ const MovieCard = ({ data, mediaType = "" }) => {
         />
 
         {/* ❤️ Nút yêu thích */}
-        <button
+        {/* <button
           onClick={handleFavorite}
           className="absolute top-2 left-2 rounded-full bg-black/60 p-2 hover:bg-red-600"
         >
           {isFavorite ? "💔" : "❤️"}
-        </button>
+        </button> */}
 
         <div className="px-4 py-2">
           <CircularProgressBar score={vote_average} />
