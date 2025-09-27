@@ -2,13 +2,6 @@ import axios from 'axios';
 import Movie from '../models/Movie.js';
 
 
-
-
-
-
-
-
-
 /**
  * Lấy danh sách phim với phân trang, tìm kiếm, sắp xếp
  * ?page=&limit=&q=&sort=

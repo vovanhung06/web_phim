@@ -32,13 +32,34 @@ export const login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Sai mật khẩu' });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    // Thêm nhiều thông tin vào token để phân biệt user
+    const token = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+        username: user.username,
+        role: user.role
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+console.log("Login user:", user._id, "Generated token:", token);
 
-    res.json({ message: 'Đăng nhập thành công', token });
+    res.json({
+      message: 'Đăng nhập thành công',
+      token,
+      user: {
+        id: user._id,
+        email: user.email,
+        username: user.username,
+        role: user.role
+      }
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 // Lấy danh sách tất cả user (chỉ để test/dev, không nên public ngoài production)
 export const getUsers = async (req, res) => {

@@ -1,13 +1,15 @@
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import SearchCard from "./SearchCard";
 import useFetch from "../hooks/useFetch";
+import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
+  const { user, logout, token, loading } = useAuth();
 
   // Gọi API search
   const [searchLoading, searchData] = useFetch({
@@ -16,26 +18,13 @@ const Header = () => {
       : "",
   });
 
-  // Trạng thái login
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-
-    const syncLogin = () => {
-      setIsLoggedIn(!!localStorage.getItem("token"));
-    };
-
-    window.addEventListener("storage", syncLogin);
-    return () => window.removeEventListener("storage", syncLogin);
-  }, []);
-
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
+    logout();
     navigate("/");
   };
+
+  // Nếu chưa load xong state thì không render (tránh nháy UI)
+  if (loading) return null;
 
   return (
     <div>
@@ -92,7 +81,7 @@ const Header = () => {
           </div>
 
           {/* Đổi nút login/logout */}
-          {isLoggedIn ? (
+          {token ? (
             <div className="flex items-center gap-3">
               <Link to="/account">
                 <button className="py-2 px-5 bg-gray-700 hover:bg-gray-600 text-white rounded-md font-semibold transition duration-200">

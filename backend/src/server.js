@@ -6,6 +6,8 @@ import { verifyToken } from "./middleware/authMiddleware.js";
 import cors from "cors";
 import movieRoutes from './routes/movieRoutes.js';   // <-- import default
 import genreRoutes from "./routes/genreRoutes.js"; // <-- import default
+import favoriteRoutes from './routes/favoriteRoutes.js'; // <-- import default
+
 
 dotenv.config();
 
@@ -25,6 +27,7 @@ connectDB();
 app.use("/api/auth", authRoutes);
 app.use('/api/movies', movieRoutes);
 app.use("/api/genres", genreRoutes)
+app.use('/api/favorites', favoriteRoutes); 
 
 
 

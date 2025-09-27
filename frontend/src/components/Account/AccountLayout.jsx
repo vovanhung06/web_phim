@@ -3,7 +3,7 @@ import Sidebar from "./Sidebar";
 import AccountInfo from "./AccountInfo";
 import EditAccount from "./EditAccount";
 import ChangePassword from "./ChangePassword";
-//import FavoriteList from "./FavoriteList";
+import FavoriteList from "./FavoriteList";
 
 export default function AccountLayout() {
   const [tab, setTab] = useState("info");

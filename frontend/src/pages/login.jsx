@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-export default function Login({ onLogin }) {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -10,80 +11,60 @@ export default function Login({ onLogin }) {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const { login } = useAuth();
+
   const validate = () => {
     if (!email) return "Vui lòng nhập email.";
     const re =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\.,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,})$/i;
     if (!re.test(email)) return "Email không hợp lệ.";
     if (!password) return "Vui lòng nhập mật khẩu.";
-    //if (password.length < 6) return "Mật khẩu phải có ít nhất 6 ký tự.";
     return "";
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
-  const v = validate();
-  if (v) return setError(v);
+    e.preventDefault();
+    setError("");
 
-  try {
-    setLoading(true);
+    const v = validate();
+    if (v) return setError(v);
 
-    // B1: Đăng nhập để lấy token
-    const res = await fetch("http://localhost:5001/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password })
-    });
+    try {
+      setLoading(true);
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Đăng nhập thất bại.");
+      // Gọi API login
+      const res = await fetch("http://localhost:5001/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    // Lưu token
-    localStorage.setItem("token", data.token);
-    window.dispatchEvent(new Event("storage"));
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Đăng nhập thất bại.");
 
-    // B2: Gọi /api/auth/me để lấy thông tin user (có role)
-    const profileRes = await fetch("http://localhost:5001/api/auth/me", {
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${data.token}`
+      // Lưu token và user vào context + localStorage
+      login(data.token, data.user);
+
+      alert("Đăng nhập thành công!");
+
+      // Điều hướng theo role
+      if (data.user.role === "admin") {
+        window.open("/admin", "_blank");
+        navigate("/");
+      } else {
+        navigate("/");
       }
-    });
-    const user = await profileRes.json();
-    if (!profileRes.ok) throw new Error(user.message || "Lấy thông tin user thất bại.");
-
-    // Lưu thêm role/email nếu muốn
-    localStorage.setItem("role", user.role);
-    localStorage.setItem("email", user.email);
-    
-
-    alert("Đăng nhập thành công!");
-    if (onLogin) onLogin({ ...data, user });
-
-    // B3: Check role để điều hướng
-    if (user.role === "admin") {
-      window.open("/admin", "_blank"); // mở tab mới
-      navigate("/");                   // vẫn giữ user ở trang chủ hiện tại
-    } else {
-      navigate("/");
+    } catch (err) {
+      setError(err.message || "Đăng nhập thất bại.");
+    } finally {
+      setLoading(false);
     }
-
-  } catch (err) {
-    setError(err.message || "Đăng nhập thất bại.");
-  } finally {
-    setLoading(false);
-  }
-};
-
-
-
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-black text-white">
-      {/* Lớp nền mờ bao quanh */}
       <div className="absolute inset-0 bg-[url('https://assets.nflxext.com/ffe/siteui/vlv3/73969b52-b6e4-4dbd-9f4c-1f7bcdd5b7b7/8b9e4a6c-8c7a-4bb0-9db7-6f7d3d2d5c2a/VN-vi-20230918-popsignuptwoweeks-perspective_alpha_website_large.jpg')] bg-cover bg-center opacity-40"></div>
-      {/* Khung bao quanh */}
+
       <div className="relative z-10 max-w-md w-full bg-black/80 rounded-xl shadow-lg p-10 border border-zinc-700">
         <h1 className="text-3xl font-bold mb-6 text-center text-red-600">
           Đăng nhập
@@ -156,7 +137,6 @@ export default function Login({ onLogin }) {
               Đăng ký
             </Link>
           </div>
-
         </form>
       </div>
     </div>
