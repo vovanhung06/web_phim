@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { getMovie } from "../libs/api";
 import CircularProgressBar from "../components/MediaList/CircularProgressBar";
 import RelatedMovie from "../components/MediaDetail/RelatedMovie";
+import CommentSection from "../components/MediaDetail/CommentSection";
 
 // Hàm helper chuyển link YouTube/Vimeo sang dạng embed
 function getEmbedUrl(url) {
@@ -135,6 +136,9 @@ export default function WatchPage() {
         <h2 className="text-2xl font-bold mb-4">Phim liên quan</h2>
         <RelatedMovie id={id} type="movie" />
       </div>
+      <CommentSection movieId={id} />
+      {/* Phần bình luận */}
+      
     </div>
   );
 }

@@ -15,4 +15,12 @@ export const verifyToken = (req, res, next) => {
   });
 };
 
-export default verifyToken;
+export const verifyAdmin = (req, res, next) => {
+  if (req.user.role === "admin") {
+    next();
+  } else {
+    return res.status(403).json({ message: "Chỉ admin mới được phép" });
+  }
+};
+
+export default { verifyToken, verifyAdmin };

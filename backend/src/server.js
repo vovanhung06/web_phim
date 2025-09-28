@@ -7,7 +7,7 @@ import cors from "cors";
 import movieRoutes from './routes/movieRoutes.js';   // <-- import default
 import genreRoutes from "./routes/genreRoutes.js"; // <-- import default
 import favoriteRoutes from './routes/favoriteRoutes.js'; // <-- import default
-
+import commentRoutes from './routes/commentRoutes.js'; // <-- import default
 
 dotenv.config();
 
@@ -28,7 +28,7 @@ app.use("/api/auth", authRoutes);
 app.use('/api/movies', movieRoutes);
 app.use("/api/genres", genreRoutes)
 app.use('/api/favorites', favoriteRoutes); 
-
+app.use('/api/comments', commentRoutes);
 
 
 

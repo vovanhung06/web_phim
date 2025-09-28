@@ -6,6 +6,7 @@ import RelatedMovie from "../components/MediaDetail/RelatedMovie";
 import useFetch from "../hooks/useFetch";
 import MovieInformation from "../components/MediaDetail/MovieInformation";
 import SeasonList from "../components/MediaDetail/SeasonList";
+import CommentSection from "../components/MediaDetail/CommentSection";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -29,6 +30,10 @@ const MediaPage = () => {
       </div>
       {type === "tv" && <SeasonList seasons={currentMovie.seasons || []} />}
       <RelatedMovie id={id} type={type} />
+          {/* Bình luận để cuối cùng */}
+    <div className="mt-10 max-w-screen-xl mx-auto p-6 text-white">
+      <CommentSection movieId={id} />
+    </div>
     </div>
   );
 };

@@ -54,3 +54,30 @@ export function updateMovie(id, data) {
 export function deleteMovie(id) {
   return api(`/movies/${id}`, { method: "DELETE" });
 }
+
+// ===== API comments =====
+export function getComments(movieId) {
+  return api(`/comments/${movieId}`, { method: "GET" });
+}
+
+export function createComment(movieId, data) {
+  return api(`/comments/${movieId}`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export function updateComment(id, data) {
+  return api(`/comments/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteComment(id) {
+  return api(`/comments/${id}`, { method: "DELETE" });
+}
+
+export function toggleLike(id) {
+  return api(`/comments/${id}/like`, { method: "POST" });
+}
