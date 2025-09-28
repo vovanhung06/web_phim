@@ -30,7 +30,12 @@
 // ]
 
 export const TRENDING_TYPES = [
-  { id: "all", title: "All", APIurl: "/movies?sort=popularity.desc&limit=12" },
+  { 
+  id: "all", 
+  title: "All", 
+  APIurl: "/movies?sort=-createdAt&limit=12" 
+}
+,
   { id: "tv", title: "Movies", APIurl: "/movies/popular" }
 ];
 

@@ -18,6 +18,8 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 const HomePage = lazy(() => import("./pages/HomePage.jsx"));
 const ActorPage = lazy(() => import("./pages/ActorPage.jsx"));
 const MediaPage = lazy(() => import("./pages/MediaPage.jsx"));
+const WatchPage = lazy(() => import("./pages/WatchPage.jsx"));
+
 
 const router = createBrowserRouter([
   {
@@ -25,6 +27,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <HomePage /> },
       { path: "/:type/:id", element: <MediaPage /> },
+      { path: "/watch/:id", element: <WatchPage /> },
       { path: "/search", element: <SearchPage /> },
       { path: "/login", element: <Login /> },
       { path: "/register", element: <Register /> },

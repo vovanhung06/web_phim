@@ -2,13 +2,14 @@ import { faPlay } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import useFetch from "../../hooks/useFetch";
 import { useModalContext } from "../../context/ModalProvider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // thêm useNavigate
 
 const Movie = ({ data: movie }) => {
   if (!movie) return null;
 
   const { backdrop_path, title, release_date, overview, _id } = movie;
   const { setIsShowing, setContent } = useModalContext();
+  const navigate = useNavigate(); // khởi tạo navigate
 
   const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
@@ -52,21 +53,17 @@ const Movie = ({ data: movie }) => {
         </div>
 
         {/* Nút Play + Chi tiết */}
-        <div>
+        <div className="flex gap-4">
           <button
-            onClick={() => {
-              if (!youtubeKey) return;
-              setIsShowing(true);
-              setContent(youtubeKey);
-            }}
-            className="mr-2 mt-3 rounded-full bg-[#E50914] px-5 py-2 hover:bg-red-700 transition"
+            onClick={() => navigate(`/watch/${_id}`)} // dùng _id thay vì id
+            className="rounded-full bg-[#E50914] px-[2vw] py-[0.5vw] text-white 
+              hover:bg-black hover:text-[#E50914] transition duration-300"
           >
-            <FontAwesomeIcon className="mr-2" icon={faPlay} />
-            Play
+            <FontAwesomeIcon icon={faPlay} /> Xem Phim
           </button>
           <Link
             to={`/movies/${_id}`}
-            className="inline-block mt-3 px-5 py-2 rounded-full bg-gray-600 hover:bg-gray-700 transition"
+            className="inline-block px-5 py-2 rounded-full bg-gray-600 hover:bg-gray-700 transition"
           >
             Chi Tiết
           </Link>
