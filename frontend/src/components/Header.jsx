@@ -35,7 +35,7 @@ const Header = () => {
             <img src="/header-logo.png" alt="" className="w-16 sm:w-28" />
           </Link>
           <Link to={"/search?media_type=movie"}>Loc Phim</Link>
-          <Link to={"/search?media_type=tv"}>Chanels</Link>
+          {/* <Link to={"/search?media_type=tv"}>Chanels</Link> */}
         </div>
 
         {/* Search + login bên phải */}
