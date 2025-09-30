@@ -28,7 +28,7 @@ const Header = () => {
 
   return (
     <div>
-      <header className="fixed top-0 z-10 flex h-14 w-screen items-center bg-black px-10 text-xs font-light text-white sm:text-base">
+      <header className="fixed top-0 z-50 flex h-14 w-screen items-center bg-black px-10 text-xs font-light text-white sm:text-base">
         {/* Logo + menu trái */}
         <div className="flex items-center gap-3">
           <Link to={"/"}>
